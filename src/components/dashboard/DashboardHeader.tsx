@@ -1,46 +1,58 @@
 
 import { useState } from "react";
-import { Bell, Search } from "lucide-react";
+import { UserProfile } from "@/components/dashboard/UserProfile";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserProfile } from "./UserProfile";
+import { Bell, Search } from "lucide-react";
+import { NotificationsPanel } from "@/components/dashboard/NotificationsPanel";
 
 export function DashboardHeader() {
-  const [showUserProfile, setShowUserProfile] = useState(false);
-
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  
   return (
     <motion.header
-      className="flex h-16 items-center border-b px-6"
+      className="flex items-center justify-between border-b px-6 py-3 bg-background"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex w-full items-center justify-between">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div>
+        <div className="flex items-center bg-muted/40 rounded-full px-3 py-1.5 focus-within:ring-1 focus-within:ring-ring w-[240px]">
+          <Search className="h-4 w-4 text-muted-foreground" />
           <input
             type="search"
+            className="border-0 bg-transparent text-sm focus:outline-none focus:ring-0 w-full ml-2 placeholder:text-muted-foreground"
             placeholder="Search..."
-            className="w-full bg-muted/10 pl-8 py-2 text-sm rounded-lg border border-input"
           />
         </div>
-        <div className="flex items-center gap-4">
-          <button className="relative p-2 text-muted-foreground hover:text-foreground">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive" />
-          </button>
-          <div 
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => setShowUserProfile(!showUserProfile)}
-          >
-            <Avatar className="h-9 w-9">
-              <AvatarImage src="" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </div>
-          <UserProfile isOpen={showUserProfile} onClose={() => setShowUserProfile(false)} />
-        </div>
       </div>
+      <div className="flex items-center space-x-4">
+        <div className="relative">
+          <button 
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            className="p-2 rounded-full hover:bg-muted relative"
+            aria-label="Notifications"
+          >
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <NotificationsPanel 
+            isOpen={notificationsOpen} 
+            onClose={() => setNotificationsOpen(false)} 
+          />
+        </div>
+        <button 
+          onClick={() => setProfileOpen(!profileOpen)} 
+          className="flex items-center space-x-2"
+        >
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="" />
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+        </button>
+      </div>
+      <UserProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
     </motion.header>
   );
 }

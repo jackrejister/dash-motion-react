@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { PieChart } from "@/components/charts/PieChart";
+import { Search } from "lucide-react";
 
 const Users = () => {
   useEffect(() => {
@@ -56,13 +57,16 @@ const Users = () => {
             <div className="p-6 border-b flex justify-between items-center">
               <h2 className="text-xl font-semibold">User List</h2>
               <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  className="px-3 py-1 border rounded-md w-64"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search users..."
+                    className="pl-9 px-3 py-1 border rounded-md w-64 bg-background text-foreground"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
             <div className="p-6">

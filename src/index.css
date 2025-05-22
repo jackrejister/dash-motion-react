@@ -101,4 +101,11 @@
   .chart-container {
     @apply transition-all duration-300 ease-out hover:shadow-lg;
   }
+  
+  /* Fix for input fields in dark mode */
+  input,
+  textarea,
+  select {
+    @apply bg-background text-foreground border-input;
+  }
 }

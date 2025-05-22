@@ -3,12 +3,44 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { toast } from "sonner";
+
+type FontSizeOption = 'small' | 'medium' | 'large';
+type AccentColor = '#3b82f6' | '#10b981' | '#8b5cf6' | '#ec4899' | '#f97316';
 
 const SettingsContent = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, fontSize, setFontSize, accentColor, setAccentColor } = useTheme();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [mobileNotifications, setMobileNotifications] = useState(false);
   const [dataSharing, setDataSharing] = useState(true);
+  const [formData, setFormData] = useState({
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com",
+    phone: "+1 (555) 123-4567",
+    password: ""
+  });
+  
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+  
+  const handleFontSizeChange = (size: FontSizeOption) => {
+    setFontSize(size);
+  };
+  
+  const handleColorChange = (color: AccentColor) => {
+    setAccentColor(color);
+  };
+  
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Settings saved successfully!");
+  };
   
   return (
     <div className="space-y-6 p-6">
@@ -37,7 +69,7 @@ const SettingsContent = () => {
               <div className="flex items-center space-x-4">
                 <div 
                   className={`flex items-center justify-center w-12 h-8 rounded-md cursor-pointer ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
-                  style={{ backgroundColor: '#f8fafc' }}
+                  style={{ backgroundColor: '#f8fafc', color: '#000' }}
                   onClick={() => {
                     if (theme !== 'light') toggleTheme();
                   }}
@@ -62,9 +94,9 @@ const SettingsContent = () => {
                 {['#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#f97316'].map(color => (
                   <div 
                     key={color}
-                    className="w-8 h-8 rounded-full cursor-pointer"
+                    className={`w-8 h-8 rounded-full cursor-pointer ${accentColor === color ? 'ring-2 ring-offset-2 ring-gray-500' : ''}`}
                     style={{ backgroundColor: color }}
-                    onClick={() => {}}
+                    onClick={() => handleColorChange(color as AccentColor)}
                   />
                 ))}
               </div>
@@ -73,9 +105,24 @@ const SettingsContent = () => {
             <div>
               <h3 className="text-base font-medium mb-2">Font Size</h3>
               <div className="flex items-center space-x-2">
-                <button className="px-3 py-1 border rounded-md hover:bg-muted/50">Small</button>
-                <button className="px-3 py-1 border rounded-md bg-primary text-primary-foreground">Medium</button>
-                <button className="px-3 py-1 border rounded-md hover:bg-muted/50">Large</button>
+                <button 
+                  className={`px-3 py-1 border rounded-md ${fontSize === 'small' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted/50'}`}
+                  onClick={() => handleFontSizeChange('small')}
+                >
+                  Small
+                </button>
+                <button 
+                  className={`px-3 py-1 border rounded-md ${fontSize === 'medium' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted/50'}`}
+                  onClick={() => handleFontSizeChange('medium')}
+                >
+                  Medium
+                </button>
+                <button 
+                  className={`px-3 py-1 border rounded-md ${fontSize === 'large' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted/50'}`}
+                  onClick={() => handleFontSizeChange('large')}
+                >
+                  Large
+                </button>
               </div>
             </div>
           </div>
@@ -152,42 +199,50 @@ const SettingsContent = () => {
           <h2 className="text-xl font-semibold">Account Settings</h2>
         </div>
         <div className="p-6">
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleFormSubmit}>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium mb-1">First Name</label>
                 <input 
                   type="text" 
-                  className="w-full px-3 py-2 border rounded-md" 
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleFormChange}
+                  className="w-full px-3 py-2 border rounded-md bg-background text-foreground" 
                   placeholder="First Name"
-                  defaultValue="John" 
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Last Name</label>
                 <input 
                   type="text" 
-                  className="w-full px-3 py-2 border rounded-md" 
-                  placeholder="Last Name" 
-                  defaultValue="Doe"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleFormChange}
+                  className="w-full px-3 py-2 border rounded-md bg-background text-foreground" 
+                  placeholder="Last Name"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Email Address</label>
                 <input 
                   type="email" 
-                  className="w-full px-3 py-2 border rounded-md" 
-                  placeholder="Email Address" 
-                  defaultValue="john.doe@example.com"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleFormChange}
+                  className="w-full px-3 py-2 border rounded-md bg-background text-foreground" 
+                  placeholder="Email Address"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Phone Number</label>
                 <input 
                   type="tel" 
-                  className="w-full px-3 py-2 border rounded-md" 
-                  placeholder="Phone Number" 
-                  defaultValue="+1 (555) 123-4567"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleFormChange}
+                  className="w-full px-3 py-2 border rounded-md bg-background text-foreground" 
+                  placeholder="Phone Number"
                 />
               </div>
             </div>
@@ -196,7 +251,10 @@ const SettingsContent = () => {
               <label className="block text-sm font-medium mb-1">Password</label>
               <input 
                 type="password" 
-                className="w-full px-3 py-2 border rounded-md" 
+                name="password"
+                value={formData.password}
+                onChange={handleFormChange}
+                className="w-full px-3 py-2 border rounded-md bg-background text-foreground" 
                 placeholder="••••••••" 
               />
             </div>
@@ -205,7 +263,7 @@ const SettingsContent = () => {
               <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md">
                 Save Changes
               </button>
-              <button type="button" className="px-4 py-2 border font-medium rounded-md">
+              <button type="button" className="px-4 py-2 border font-medium rounded-md bg-background">
                 Cancel
               </button>
             </div>
