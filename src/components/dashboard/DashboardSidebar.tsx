@@ -23,12 +23,13 @@ import {
   LineChart,
   Settings,
   Users,
-  Bell,
+  Menu,
 } from "lucide-react";
 
 export function DashboardSidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
 
   const menuItems = [
     { icon: Home, label: "Home", href: "/home" },
@@ -55,31 +56,36 @@ export function DashboardSidebar() {
     if (savedState) {
       setCollapsed(savedState === 'true');
     }
+    
+    // Set floating button visibility based on sidebar state
+    setShowFloatingButton(savedState === 'true');
   }, []);
 
   // Save sidebar state to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('sidebarCollapsed', collapsed.toString());
+    setShowFloatingButton(collapsed);
   }, [collapsed]);
 
   return (
     <>
       {/* Floating button to open sidebar when collapsed */}
-      {collapsed && (
+      {showFloatingButton && (
         <motion.button
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
           onClick={toggleSidebar}
-          className="fixed left-4 top-4 z-50 rounded-full bg-primary p-2 text-white shadow-lg hover:bg-primary/90 md:hidden"
+          className="fixed left-4 top-4 z-50 rounded-full bg-primary p-2 text-white shadow-lg hover:bg-primary/90"
           aria-label="Open sidebar"
         >
-          <ChevronRight className="h-4 w-4" />
+          <Menu className="h-5 w-5" />
         </motion.button>
       )}
     
       <Sidebar
         className={cn("border-r border-border bg-sidebar")}
+        collapsible={collapsed ? "offcanvas" : "none"}
       >
         <SidebarHeader className="flex items-center justify-between px-4 py-6">
           <motion.div
@@ -100,7 +106,7 @@ export function DashboardSidebar() {
             )}
             <SidebarTrigger 
               className="ml-auto"
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={toggleSidebar}
             >
               {collapsed ? (
                 <ChevronRight className="h-4 w-4" />

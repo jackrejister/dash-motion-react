@@ -20,7 +20,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={!window.matchMedia('(max-width: 1024px)').matches}>
         <div className={cn("min-h-screen flex w-full bg-background")}>
           <DashboardSidebar />
           <motion.div 
