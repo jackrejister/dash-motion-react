@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LogOut, Settings, User } from "lucide-react";
 
 interface UserProfileProps {
@@ -11,6 +11,13 @@ interface UserProfileProps {
 }
 
 export function UserProfile({ isOpen, onClose }: UserProfileProps) {
+  const navigate = useNavigate();
+  
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onClose();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -41,22 +48,20 @@ export function UserProfile({ isOpen, onClose }: UserProfileProps) {
               </div>
             </div>
             <div className="p-2">
-              <Link 
-                to="/settings"
-                onClick={onClose}
+              <button 
+                onClick={() => handleNavigation('/profile')}
                 className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-muted"
               >
                 <User className="h-4 w-4" />
                 <span>My Profile</span>
-              </Link>
-              <Link 
-                to="/settings"
-                onClick={onClose}
+              </button>
+              <button 
+                onClick={() => handleNavigation('/settings')}
                 className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-muted"
               >
                 <Settings className="h-4 w-4" />
                 <span>Account Settings</span>
-              </Link>
+              </button>
               <button 
                 className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-muted text-destructive"
                 onClick={onClose}

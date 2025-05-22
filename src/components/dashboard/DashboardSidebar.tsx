@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 export function DashboardSidebar() {
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
@@ -36,6 +37,16 @@ export function DashboardSidebar() {
     { icon: Users, label: "Users", href: "/users" },
     { icon: Settings, label: "Settings", href: "/settings" },
   ];
+
+  // Function to determine if a menu item is active
+  const isActive = (href: string) => {
+    return location.pathname === href;
+  };
+
+  // Function to toggle sidebar collapse state
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
     <Sidebar
@@ -76,7 +87,7 @@ export function DashboardSidebar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
               >
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.href)}>
                   <Link to={item.href} className="flex items-center gap-2">
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
@@ -87,8 +98,16 @@ export function DashboardSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4">
+      <SidebarFooter className="p-4 flex justify-between items-center">
         <ThemeToggle />
+        {collapsed && (
+          <button 
+            onClick={toggleSidebar} 
+            className="p-2 rounded-md hover:bg-muted/50"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
