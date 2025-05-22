@@ -1,8 +1,8 @@
 
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
-import { useEffect, useState } from "react";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 const Settings = () => {
   useEffect(() => {
