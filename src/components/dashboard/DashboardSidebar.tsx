@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -28,18 +29,16 @@ export function DashboardSidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { icon: Home, label: "Home", href: "#" },
-    { icon: LayoutDashboard, label: "Dashboard", href: "#" },
-    { icon: BarChart2, label: "Analytics", href: "#" },
-    { icon: LineChart, label: "Reports", href: "#" },
-    { icon: Users, label: "Users", href: "#" },
-    { icon: Settings, label: "Settings", href: "#" },
+    { icon: Home, label: "Home", href: "/home" },
+    { icon: LayoutDashboard, label: "Dashboard", href: "/" },
+    { icon: BarChart2, label: "Analytics", href: "/analytics" },
+    { icon: LineChart, label: "Reports", href: "/reports" },
+    { icon: Users, label: "Users", href: "/users" },
+    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
     <Sidebar
-      defaultCollapsed={collapsed}
-      onCollapsedChange={setCollapsed}
       className={cn("border-r border-border bg-sidebar")}
     >
       <SidebarHeader className="flex items-center justify-between px-4 py-6">
@@ -78,10 +77,10 @@ export function DashboardSidebar() {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <SidebarMenuButton asChild>
-                  <a href={item.href} className="flex items-center gap-2">
+                  <Link to={item.href} className="flex items-center gap-2">
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </motion.div>
             </SidebarMenuItem>
